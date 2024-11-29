@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devine le nombre magique !</title>
+
+    <style>
+      html {
+        font-family: sans-serif;
+      }
+
+      body {
+        width: 50%;
+        max-width: 800px;
+        min-width: 480px;
+        margin: 0 auto;
+      }
+      
+      .form input[type="number"] {
+        width: 200px;
+      }
+
+      .lastResult {
+        color: white;
+        padding: 3px;
+      }
+    </style>
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">  
+</head>
+<body class="container d-flex justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+        <h1 class="h1 mb-5 text-center mt-2">
+            <span class="badge text-bg-primary">Devine le nombre</span>
+        </h1>
+    
+    
+        <div class="card mb-5">
+            <div class="card-body">
+                <p class="card-title fw-bold">Le programme a choisi un nombre aléatoire entre 1 et 100.</p>
+                <p class="card-text">Voyons si tu peux le deviner en moins de <strong>10 essais</strong> !</p>
+                <p class="card-text">À chaque essai, le programme te donnera un indice par rapport à ta proposition...</p>
+            </div>
+        </div>
+    
+    
+        <div class="mb-3">
+          <label for="guessField" class="form-label">Ta proposition: </label>
+          <input type="number" min="1" max="100" required id="guessField" class="guessField form-control">
+        </div>
+        <input type="submit" value="Deviner" class=" btn btn-secondary guessSubmit">
+     
+    
+        <div class="resultParas">
+          <p class="guesses"></p>
+          <p class="lastResult alert"></p>
+          <p class="lowOrHi lead"></p>
+        </div>
+    </div>
+
+
+
+ 
+
+   
+   <script>
+function checkGuess() {
+  let userGuess = Number(guessField.value);
+  if (guessCount === 1) {
+    guesses.textContent = "Propositions précédentes : ";
+  }
+  guesses.textContent += userGuess + " , ";
+
+  if (userGuess === randomNumber) {
+    lastResult.textContent = "Bravo, vous avez trouvé le nombre ! 🥳";
+    lastResult.classList.remove('alert-danger');
+    lastResult.classList.add('alert-success');
+    lowOrHi.textContent = "";
+    setGameOver();
+  } else if (guessCount === 10) {
+    lastResult.textContent = "!!! PERDU 💀💀💀!!!";
+    setGameOver();
+  } else {
+    lastResult.textContent = "Désolé, raté ! 🤕";
+    lastResult.classList.add('alert-danger');
+    if (userGuess < randomNumber) {
+      lowOrHi.textContent = "Le nombre saisi est trop petit ! 🥹";
+    } else if (userGuess > randomNumber) {
+      lowOrHi.textContent = "Le nombre saisi est trop grand ! 😱";
+    }
+  }
+
+  guessCount++;
+  guessField.value = "";
+  guessField.focus();
+}
+
+function setGameOver() {
+  guessField.disabled = true;
+  guessSubmit.disabled = true;
+  resetButton = document.createElement("button");
+  resetButton.textContent = "Nouvelle partie ? 🤔";
+  resetButton.classList.add("btn", "btn-secondary");
+  document.querySelector('.col-12').appendChild(resetButton);
+  resetButton.addEventListener("click", resetGame);
+}
+
+function resetGame() {
+  guessCount = 1;
+
+  let resetParas = document.querySelectorAll(".resultParas p");
+  for (let i = 0; i < resetParas.length; i++) {
+    resetParas[i].textContent = "";
+  }
+
+  resetButton.parentNode.removeChild(resetButton);
+
+  guessField.disabled = false;
+  guessSubmit.disabled = false;
+  guessField.value = "";
+  guessField.focus();
+
+  lastResult.classList.remove('alert-danger', 'alert-success');
+
+  randomNumber = Math.floor(Math.random() * 100) + 1;
+}
+
+let resetParas = document.querySelectorAll(".resultParas p");
+for (let i = 0; i < resetParas.length; i++) {
+  resetParas[i].textContent = "";
+}
+
+let randomNumber = Math.floor(Math.random() * 100) + 1;
+
+let guesses = document.querySelector(".guesses");
+let lastResult = document.querySelector(".lastResult");
+let lowOrHi = document.querySelector(".lowOrHi");
+
+let guessSubmit = document.querySelector(".guessSubmit");
+let guessField = document.querySelector(".guessField");
+
+let guessCount = 1;
+let resetButton;
+guessSubmit.addEventListener("click", checkGuess);
+guessField.focus();
+
+    </script>
+</body>
+</html>
